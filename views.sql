@@ -1,4 +1,4 @@
-CREATE VIEW dbo.WidokPieskowHodowli AS
+CREATE VIEW hodowla.WidokPieskowHodowli AS
 SELECT
     P.id AS piesekId,
     P.imie,
@@ -20,7 +20,7 @@ GROUP BY
     P.id, P.imie, P.rasa, P.dataUrodzenia, P.opis, P.plec;
 
 
-CREATE VIEW dbo.WidokWlasciciele AS
+CREATE VIEW klienci.WidokWlasciciele AS
 SELECT
     W.id AS wlascicielId,
     W.imie AS imie_wlasciciela,
@@ -38,7 +38,7 @@ JOIN
 GROUP BY
     W.id, W.imie, W.nazwisko, A.miasto, A.ulica, A.numerBudynku;
 
-CREATE VIEW dbo.WidokMartwePieski AS
+CREATE VIEW hodowla.WidokMartwePieski AS
 SELECT
     Z.id AS zgonyId,
     Z.dataZgonu,
@@ -53,7 +53,7 @@ FROM
 JOIN
     hodowla.Pieski P ON Z.piesekId = P.id;
 
-CREATE VIEW dbo.WidokStanowiska AS
+CREATE VIEW firma.WidokStanowiska AS
 SELECT
     S.id,
     S.nazwa AS stanowisko,
@@ -69,7 +69,7 @@ LEFT JOIN
 GROUP BY
     S.id, S.nazwa, S.opis, P2.nazwa;
 
-CREATE VIEW dbo.WidokPoleRodowody AS
+CREATE VIEW hodowla.WidokPoleRodowody AS
 SELECT
     R.piesekId,
     O.imie AS ojciec,

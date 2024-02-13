@@ -1,4 +1,7 @@
-CREATE PROCEDURE SprawdzCzyRekordIstnieje
+USE OwczarkiHodowla
+GO
+
+CREATE PROCEDURE dbo.SprawdzCzyRekordIstnieje
     @tabela NVARCHAR(255),
     @klucz INT
 AS
@@ -7,7 +10,7 @@ BEGIN
     BEGIN
         DECLARE @errorMsg NVARCHAR(255);
         SET @errorMsg = CONCAT('Null is not acceptable for key from table ',  @tabela);
-        RAISEERROR (@errorMsg, 16, 1);
+        RAISERROR (@errorMsg, 16, 1);
         RETURN;
     END
 
@@ -16,14 +19,14 @@ BEGIN
                     BEGIN
                         DECLARE @errorMsg NVARCHAR(255);
                         SET @errorMsg = ''Rekord o id '' + CAST(' + CAST(@klucz AS NVARCHAR(10)) + ' AS NVARCHAR(10)) + '' nie istnieje w tabeli ' + @tabela + '.'';
-                        RAISEERROR (@errorMsg, 16, 1);
+                        RAISERROR (@errorMsg, 16, 1);
                     END';
     EXEC sp_executesql @query;
 END;
 
 
 -- Procedura do wyliczenia kosztu dla psa o podanym id
-CREATE PROCEDURE WyliczKosztWizytPieska
+CREATE PROCEDURE hodowla.WyliczKosztWizytPieska
     @piesekId INT
 AS
 BEGIN
@@ -41,7 +44,7 @@ BEGIN
 END
 
 -- Procedura do pełnotekstowego wyszukiwania piesków po opisie
-CREATE PROCEDURE SzukajPieskaPoOpisie
+CREATE PROCEDURE hodowla.SzukajPieskaPoOpisie
     @szukane NVARCHAR(255)
 AS
 BEGIN
@@ -51,7 +54,7 @@ BEGIN
 END;
 
 -- Procedura do pełnotekstowego wyszukiwania piesków po notatce
-CREATE PROCEDURE SzukajPsaPoNotatce
+CREATE PROCEDURE hodowla.SzukajPsaPoNotatce
     @szukane NVARCHAR(400)
 AS
 BEGIN
@@ -62,7 +65,7 @@ BEGIN
 END;
 
 -- Procedura obliczająca średnią ocen
-CREATE PROCEDURE ObliczSredniaOcen
+CREATE PROCEDURE klienci.ObliczSredniaOcen
 AS
 BEGIN
     SELECT
@@ -71,7 +74,7 @@ BEGIN
 END;
 
 -- Procedura do przeszukiwania opinii wg określonych słów lub fraz
-CREATE PROCEDURE SzukajOpinie
+CREATE PROCEDURE klienci.SzukajOpinie
     @szukane NVARCHAR(400)
 AS
 BEGIN
@@ -85,7 +88,7 @@ BEGIN
 END;
 
 -- Procedura szukająca dane o psach danego właściciela
-CREATE PROCEDURE SzukajDaneOPsachWlasciciela
+CREATE PROCEDURE hodowla.SzukajDaneOPsachWlasciciela
     @wlascicielId INT
 AS
 BEGIN
@@ -100,7 +103,7 @@ BEGIN
 END;
 
 -- Procedura dodająca adopcję na psa przez nowego właściciela
-CREATE PROCEDURE DodajAdopcjeNowegoWlasciciela
+CREATE PROCEDURE hodowla.DodajAdopcjeNowegoWlasciciela
     @imieWlasciciela NVARCHAR(255),
     @nazwiskoWlasciciela NVARCHAR(255),
     @kodPocztowy NVARCHAR(50),
@@ -133,7 +136,7 @@ BEGIN
 END;
 
 -- Procedura dodająca adopcję do istniejącego właściciela
-CREATE PROCEDURE DodaAdopcjeIniejacegoWlasciciela
+CREATE PROCEDURE hodowla.DodaAdopcjeIniejacegoWlasciciela
     @wlascicielId INT,
     @piesekId INT
 AS
@@ -159,7 +162,7 @@ BEGIN
 END;
 
 --Procedura zaznaczająca śmierć danego pieska, przyjmuje się jej wykonanie na dzień tragedii
-CREATE PROCEDURE OznaczSmiercPieska
+CREATE PROCEDURE hodowla.OznaczSmiercPieska
     @piesekId INT, 
     @przyczyna NVARCHAR(60) = 'brak przyczyny'
 AS
@@ -172,7 +175,7 @@ BEGIN
 END;
 
 --Procedura dodająca tresure do bazy danych. Przyjmuje się, że bazowy stan jest taki, że pies uczestniczy w tresurze.
-CREATE PROCEDURE RozpoczetaTresura
+CREATE PROCEDURE hodowla.RozpoczetaTresura
     @piesekId INT,
     @dataRozpoczecia DATE,
     @typ NVARCHAR(50),
@@ -189,7 +192,7 @@ BEGIN
 END;
 
 --Procedura zmieniająca stan tresury danego pieska na zakończony
-CREATE PROCEDURE ZakonczenieTresury
+CREATE PROCEDURE hodowla.ZakonczenieTresury
     @piesekId INT,
     @dataZakonczenia DATE = NULL
 AS
@@ -203,7 +206,7 @@ BEGIN
 END;
 
 --Procedura przypisująca danemu pieskowi certyfikat
-CREATE PROCEDURE DodajCertyfikatPsowi
+CREATE PROCEDURE hodowla.DodajCertyfikatPsowi
     @piesekId INT,
     @certyfikatId INT,
     @data DATE = NULL,
@@ -218,7 +221,7 @@ BEGIN
 END;
 
 --Procedura dodająca zapis z uczestnictwa Pieska w wystawie
-CREATE PROCEDURE UczestnictwoPieska
+CREATE PROCEDURE hodowla.UczestnictwoPieska
     @piesekId INT,
     @wystawaId INT,
     @wpisowe SMALLMONEY, 
@@ -233,7 +236,7 @@ BEGIN
     VALUES (@piesekId, @wystawaId, @pozycja, @wpisowe, @dataOdbycia);
 END;
 
-CREATE PROCEDURE DodajZalecenieDoDiety
+CREATE PROCEDURE hodowla.DodajZalecenieDoDiety
     @piesekId INT,
     @jedzenieId INT,
     @czyLubi BIT,
@@ -261,7 +264,7 @@ BEGIN
 END;
 
 -- Procedura dodająca pracownika
-CREATE PROCEDURE DodajPracownika
+CREATE PROCEDURE firma.DodajPracownika
     @nrTelefonu VARCHAR(11),
     @email VARCHAR(50),
     @adresId INT,
@@ -294,7 +297,7 @@ END;
 
 
 -- Procedura dodająca produkt do magazynu
-CREATE PROCEDURE DodajProduktDoMagazynu
+CREATE PROCEDURE magazyn.DodajProduktDoMagazynu
     @produktId INT,
     @ilosc INT,
     @cena SMALLMONEY
@@ -343,7 +346,7 @@ BEGIN
     VALUES (@imie, @nazwisko, @adresId);
 END;
 
-CREATE PROCEDURE UtworzStanowisko
+CREATE PROCEDURE firma.UtworzStanowisko
     @podlega HIERARCHYID = NULL,
     @nazwa NVARCHAR(35),
     @opis NVARCHAR(max),
@@ -354,7 +357,7 @@ BEGIN
     -- Sprawdzenie czy stanowisko o podanym ID istnieje
     IF NOT EXISTS (SELECT 1 FROM firma.Stanowiska WHERE id = @podlega)
     BEGIN
-        RAISEERROR('Podane stanowisko nadrzędne nie istnieje.', 16, 1);
+        RAISERROR('Podane stanowisko nadrzędne nie istnieje.', 16, 1);
         RETURN;
     END
 
@@ -376,7 +379,7 @@ END;
 
 
 -- Procedura tworząca zamówienie od producenta
-CREATE PROCEDURE UtworzZamowienieProducent
+CREATE PROCEDURE magazyn.UtworzZamowienieProducent
     @produktId INT,
     @ilosc INT,
     @cena SMALLMONEY  -- Dodanie parametru cena
@@ -395,7 +398,7 @@ END;
 
 
 -- Procedura wycofująca produkt
-CREATE PROCEDURE WycofajProdukt
+CREATE PROCEDURE magazyn.WycofajProdukt
     @produktId INT
 AS
 BEGIN
@@ -415,7 +418,7 @@ BEGIN
 END;
 
 -- Procedura tworząca zamówienie od producenta z dodaniem nowych produktów do magazynu
-CREATE PROCEDURE UtworzZamowienieProducentaNoweProdukty
+CREATE PROCEDURE magazyn.UtworzZamowienieProducentaNoweProdukty
     @nazwa NVARCHAR(255),
     @ilosc INT,
     @cena SMALLMONEY,
@@ -441,7 +444,7 @@ BEGIN
 END;
 
 -- Procedura zwalniająca pracownika
-CREATE PROCEDURE ZwolnijPracownika
+CREATE PROCEDURE firma.ZwolnijPracownika
     @pracownikId INT,
     dataZwolnienia DATE NOT NULL,
     powod NVARCHAR(100) = 'Brak powodu'
